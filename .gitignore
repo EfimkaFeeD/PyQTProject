@@ -1,5 +1,49 @@
-# Created by https://www.toptal.com/developers/gitignore/api/linux,pycharm,venv,python,qt,qtcreator
-# Edit at https://www.toptal.com/developers/gitignore?templates=linux,pycharm,venv,python,qt,qtcreator
+# Created by https://www.toptal.com/developers/gitignore/api/linux,windows,python,pycharm,venv,qt,qtcreator,archives,archlinuxpackages
+# Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,python,pycharm,venv,qt,qtcreator,archives,archlinuxpackages
+
+### Archives ###
+# It's better to unpack these files and commit the raw source because
+# git has its own built in compression methods.
+*.7z
+*.jar
+*.rar
+*.zip
+*.gz
+*.gzip
+*.tgz
+*.bzip
+*.bzip2
+*.bz2
+*.xz
+*.lzma
+*.cab
+*.xar
+
+# Packing-only formats
+*.iso
+*.tar
+
+# Package management formats
+*.dmg
+*.xpi
+*.gem
+*.egg
+*.deb
+*.rpm
+*.msi
+*.msm
+*.msp
+*.txz
+
+### ArchLinuxPackages ###
+*.tar.*
+*.exe
+*.log
+*.log.*
+*.sig
+
+pkg/
+src/
 
 ### Linux ###
 *~
@@ -21,6 +65,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
+.idea/
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -99,7 +144,7 @@ fabric.properties
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
 
 # *.iml
-# modules.xmlhttps://www.toptal.com/developers/gitignore?templates=linux,pycharm,venv,python,qt,qtcreator
+# modules.xml
 # .idea/misc.xml
 # *.ipr
 
@@ -155,7 +200,6 @@ wheels/
 share/python-wheels/
 *.egg-info/
 .installed.cfg
-*.egg
 MANIFEST
 
 # PyInstaller
@@ -188,7 +232,6 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -390,4 +433,27 @@ compile_commands.json
 pyvenv.cfg
 pip-selfcheck.json
 
-# End of https://www.toptal.com/developers/gitignore/api/linux,pycharm,venv,python,qt,qtcreator
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.msix
+
+# Windows shortcuts
+*.lnk
+
+# End of https://www.toptal.com/developers/gitignore/api/linux,windows,python,pycharm,venv,qt,qtcreator,archives,archlinuxpackages
+
