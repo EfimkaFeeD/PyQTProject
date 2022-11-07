@@ -22,7 +22,21 @@ class MainApp(QMainWindow):
         for i in tmp:
             result.append(i)
         print(result)
-        # TODO make database linking ids work
+        result[2] = self.connection.cursor().execute(
+            """SELECT name FROM genres WHERE id = ?""", (result[2], )).fetchone()[0]
+        result[3] = self.connection.cursor().execute(
+            """SELECT type FROM types WHERE id = ?""", (result[3],)).fetchone()[0]
+        result[6] = self.connection.cursor().execute(
+            """SELECT description FROM descriptions WHERE id = ?""", (result[6],)).fetchone()[0]
+        result[7] = self.connection.cursor().execute(
+            """SELECT poster FROM posters WHERE id = ?""", (result[7],)).fetchone()[0]
+        result[8] = self.connection.cursor().execute(
+            """SELECT image FROM images WHERE id = ?""", (result[8],)).fetchone()[0]
+        result[9] = self.connection.cursor().execute(
+            """SELECT trailer FROM trailers WHERE id = ?""", (result[9],)).fetchone()[0]
+        result[11] = self.connection.cursor().execute(
+            """SELECT film_crew FROM film_crews WHERE id = ?""", (result[11],)).fetchone()[0]
+        print(result)
         # TODO make description, poster, images work
         # TODO do smth with seasons and episodes
         # TODO right now trailer will be just youtube link, make embedded player or connect youtube-dlp
