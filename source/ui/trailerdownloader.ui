@@ -17,7 +17,7 @@
    <widget class="QLineEdit" name="urlinput">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>100</x>
       <y>10</y>
       <width>300</width>
       <height>35</height>
@@ -34,7 +34,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>70</width>
+      <width>80</width>
       <height>35</height>
      </rect>
     </property>
@@ -44,13 +44,13 @@
      </font>
     </property>
     <property name="text">
-     <string>URL:</string>
+     <string>URL :</string>
     </property>
    </widget>
    <widget class="QPushButton" name="downloadbutton">
     <property name="geometry">
      <rect>
-      <x>400</x>
+      <x>410</x>
       <y>10</y>
       <width>150</width>
       <height>35</height>
@@ -63,27 +63,6 @@
     </property>
     <property name="text">
      <string>Скачать</string>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="statusoutput">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>50</y>
-      <width>540</width>
-      <height>900</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>24</pointsize>
-     </font>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-    <property name="textInteractionFlags">
-     <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
     </property>
    </widget>
    <widget class="QLineEdit" name="nameinput">
@@ -116,10 +95,10 @@
      </font>
     </property>
    </widget>
-   <widget class="QPushButton" name="convertbutton">
+   <widget class="QPushButton" name="renamebutton">
     <property name="geometry">
      <rect>
-      <x>875</x>
+      <x>850</x>
       <y>100</y>
       <width>300</width>
       <height>50</height>
@@ -131,7 +110,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Конвертировать</string>
+     <string>Переименовать</string>
     </property>
    </widget>
    <widget class="QLabel" name="nameoutputlabel">
@@ -168,6 +147,163 @@
     </property>
     <property name="text">
      <string>Исходное имя:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="namemove">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>200</y>
+      <width>300</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="namemovelabel">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>200</y>
+      <width>200</width>
+      <height>35</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Имя файла:</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="movebutton">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>245</y>
+      <width>300</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Переместить</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="instructiontext">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>350</y>
+      <width>650</width>
+      <height>600</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="downloadended">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>550</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="overwriteMode">
+     <bool>false</bool>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="filenameoutput">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>550</width>
+      <height>150</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="overwriteMode">
+     <bool>false</bool>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="trailerinfo">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>550</y>
+      <width>550</width>
+      <height>300</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
+    <property name="overwriteMode">
+     <bool>false</bool>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="checkfilebutton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>400</y>
+      <width>550</width>
+      <height>100</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>24</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Проверить наличие файла</string>
     </property>
    </widget>
   </widget>
