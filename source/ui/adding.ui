@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1280</width>
+    <height>960</height>
+   </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>16</pointsize>
+   </font>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QDialogButtonBox" name="ok_button">
+   <property name="geometry">
+    <rect>
+     <x>1180</x>
+     <y>920</y>
+     <width>90</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QLabel" name="namelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>20</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Название:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="originalnamelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>250</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Оригинальное название:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="genrelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>100</y>
+     <width>70</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Жанр:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="typelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>140</y>
+     <width>40</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Тип:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="datelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>180</y>
+     <width>160</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Дата премьеры:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="durationlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>220</y>
+     <width>310</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Продолжительность в минутах:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="descriptionlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>260</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Файл с описанием:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="posterlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>300</y>
+     <width>170</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Файл с постером:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imagelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>340</y>
+     <width>230</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Файл с изображением:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="trailerlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>380</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Файл с трейлером:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="directorlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>420</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Режиссер:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="mainactorslabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>460</y>
+     <width>170</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Главные актеры:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="castlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>500</y>
+     <width>170</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Файл с актерами:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="seasonslabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>540</y>
+     <width>210</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Количество сезонов:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="episodelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>580</y>
+     <width>190</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Количество серий:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="imbdratinglabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>620</y>
+     <width>170</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Рейтинг на IMDb:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="rottentomatoesratinglabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>660</y>
+     <width>280</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Рейтинг на Rotten Tomatoes:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="kinopoiskratinglabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>700</y>
+     <width>230</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Рейтинг на КиноПоиск:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="boxofficelabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>740</y>
+     <width>70</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Сборы:</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="wheretowatchlabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>780</y>
+     <width>140</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Где смотреть:</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>ok_button</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ok_button</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

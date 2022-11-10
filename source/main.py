@@ -19,19 +19,25 @@ class MainApp(QMainWindow):
         self.setWindowTitle('Фильмотека')
         self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
         self.connection = sqlite3.connect('films_db.db')
-        self.searchbutton.clicked.connect(self.search_in_table)
+        self.searchnamebutton.clicked.connect(lambda: self.search_in_table(1))
+        self.searchoriginalnamebutton.clicked.connect(lambda: self.search_in_table(2))
         self.about_program_action.triggered.connect(
             lambda: AboutProgramDialog().exec_())
-        self.castbutton.clicked.connect(lambda: CastDialog(self.result[12]).exec_())
-        self.descriptionbutton.clicked.connect(lambda: DescriptionDialog(self.result[6]).exec_())
-        self.trailerbutton.clicked.connect(lambda: self.trailer(getcwd() + '/trailers/' + self.result[10]))
+        self.help_action.triggered.connect(lambda: HelpDialog().exec_())
+        self.castbutton.clicked.connect(lambda: self.check_for_casts())
+        self.descriptionbutton.clicked.connect(lambda: self.check_for_description())
+        self.trailerbutton.clicked.connect(lambda: self.trailer())
 
-    def search_in_table(self):
+    def search_in_table(self, name_type):
         try:
             result = []
             query = self.searchedit.text()
-            tmp = self.connection.cursor().execute(
-                """SELECT * FROM films_table WHERE title = ?""", (query, )).fetchall()
+            if name_type == 1:
+                tmp = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE title = ?""", (query, )).fetchall()
+            elif name_type == 2:
+                tmp = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE original_title = ?""", (query,)).fetchall()
 
             tmp = tmp[0]
 
@@ -84,18 +90,33 @@ class MainApp(QMainWindow):
 Сборы: {result[19]}
 Где смотреть: {result[20]}
 """)
-        except QPixmap:
+        except IndexError:
             self.searchresult.setFontPointSize(24)
             self.searchresult.setText(
                 'По вашему запросу не было найдено информации, либо информация по данному запросу некорректна. '
                 'Попробуйте изменить свой запрос или отредактируйте некорректную информацию.')
 
-    def trailer(self, file):
-        import locale
-        locale.setlocale(locale.LC_NUMERIC, "C")
-        player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, osc=True)
-        player.play(file)
-        player.wait_for_playback()
+    def trailer(self):
+        try:
+            file = getcwd() + '/trailers/' + self.result[10]
+            import locale
+            locale.setlocale(locale.LC_NUMERIC, "C")
+            player = mpv.MPV(input_default_bindings=True, input_vo_keyboard=True, osc=True)
+            player.play(file)
+        except IndexError:
+            self.searchresult.setText('Информации о трейлере для данного фильма нет.')
+
+    def check_for_description(self):
+        try:
+            DescriptionDialog(self.result[7]).exec_()
+        except IndexError:
+            self.searchresult.setText('Информации об описании для данного фильма нет.')
+
+    def check_for_casts(self):
+        try:
+            CastDialog(self.result[13]).exec_()
+        except IndexError:
+            self.searchresult.setText('Информации об актерах для данного фильма нет.')
 
     def closeEvent(self, event):
         self.connection.close()
@@ -150,6 +171,29 @@ class TrailerDialog(QDialog):
         player.setVideoOutput(self.trailervideo)
         player.play()
 """
+
+
+class HelpDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ui/help.ui', self)
+        self.setFixedSize(960, 720)
+        self.setWindowTitle('Помощь')
+        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
+        with open('help.txt') as file:
+            txt = file.read()
+        self.help_text.setFontPointSize(24)
+        self.help_text.setText(txt)
+
+
+class FilterDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ui/filter.ui', self)
+        self.setFixedSize(1280, 960)
+        self.setWindowTitle('Фильтрация')
+        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
+
 
 
 if __name__ == '__main__':

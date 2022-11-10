@@ -47,27 +47,37 @@ class MainApp(QMainWindow):
         self.filenameoutput.setText(self.filename)
 
     def check_file(self):
-        tmp = self.data['requested_downloads']
-        if exists(self.path):
-            self.trailerinfo.setText('Скачивание прошло успешно, файл находится в папке, продолжайте следовать инструкции.')
-        else:
+        try:
+            tmp = self.data['requested_downloads']
+            if exists(self.path):
+                self.trailerinfo.setText('Скачивание прошло успешно, файл находится в папке, '
+                                         'продолжайте следовать инструкции.')
+            else:
+                self.trailerinfo.setText('Что-то пошло не так, попробуйте повторить попытку скачивания.')
+            self.nameinput.setText(self.filename)
+            self.nameoutput.setText(self.filename[self.filename.rfind('.'):])
+        except KeyError:
             self.trailerinfo.setText('Что-то пошло не так, попробуйте повторить попытку скачивания.')
-        self.nameinput.setText(self.filename)
-        self.nameoutput.setText(self.filename[self.filename.rfind('.'):])
 
     def rename_file(self):
-        name_input = self.nameinput.text()
-        name_output = self.nameoutput.text()
-        self.outputname = name_output
-        rename(name_input, name_output)
-        self.namemove.setText(self.outputname)
+        try:
+            name_input = self.nameinput.text()
+            name_output = self.nameoutput.text()
+            self.outputname = name_output
+            rename(name_input, name_output)
+            self.namemove.setText(self.outputname)
+        except FileNotFoundError:
+            self.trailerinfo.setText('Что-то пошло не так, проверьте наличие файла в папке.')
 
 
     def move_file(self):
-        move_name = self.namemove.text()
-        before = getcwd() + '/' + move_name
-        after = getcwd() + '/trailers/' + move_name
-        shutil.move(before, after)
+        try:
+            move_name = self.namemove.text()
+            before = getcwd() + '/' + move_name
+            after = getcwd() + '/trailers/' + move_name
+            shutil.move(before, after)
+        except shutil.Error:
+            self.trailerinfo.setText('Что-то пошло не так, проверьте наличие файла в папке.')
 
 
 if __name__ == '__main__':

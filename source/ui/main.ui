@@ -38,12 +38,12 @@
      <string>Поиск:</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="searchbutton">
+   <widget class="QPushButton" name="searchnamebutton">
     <property name="geometry">
      <rect>
       <x>390</x>
       <y>10</y>
-      <width>141</width>
+      <width>375</width>
       <height>31</height>
      </rect>
     </property>
@@ -54,7 +54,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Искать</string>
+     <string>Искать по переведённому названию</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="searchedit">
@@ -183,6 +183,24 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Актеры</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="searchoriginalnamebutton">
+    <property name="geometry">
+     <rect>
+      <x>765</x>
+      <y>10</y>
+      <width>375</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Искать по оригинальному названию</string>
     </property>
    </widget>
   </widget>
