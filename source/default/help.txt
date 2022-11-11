@@ -1,0 +1,3 @@
+This is text to explain
+
+how to work with program

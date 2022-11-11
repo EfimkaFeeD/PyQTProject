@@ -1,3 +1,0 @@
-test text about program
-
-used by "about_program_action"

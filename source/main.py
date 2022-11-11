@@ -18,11 +18,12 @@ class MainApp(QMainWindow):
         self.setFixedSize(1280, 960)
         self.setWindowTitle('Фильмотека')
         self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
-        self.connection = sqlite3.connect('films_db.db')
+        self.connection = sqlite3.connect('default/films_db.db')
         self.searchnamebutton.clicked.connect(lambda: self.search_in_table(1))
         self.searchoriginalnamebutton.clicked.connect(lambda: self.search_in_table(2))
         self.about_program_action.triggered.connect(
             lambda: AboutProgramDialog().exec_())
+        self.add_info_action.triggered.connect(lambda: AddingDialog().exec_())
         self.help_action.triggered.connect(lambda: HelpDialog().exec_())
         self.castbutton.clicked.connect(lambda: self.check_for_casts())
         self.descriptionbutton.clicked.connect(lambda: self.check_for_description())
@@ -44,6 +45,8 @@ class MainApp(QMainWindow):
             for i in tmp:
                 result.append(i)
 
+            series = str(result[4])
+
             result[3] = self.connection.cursor().execute(
                 """SELECT name FROM genres WHERE id = ?""", (result[3], )).fetchone()[0]
             result[4] = self.connection.cursor().execute(
@@ -60,8 +63,7 @@ class MainApp(QMainWindow):
                 """SELECT actors FROM casts WHERE id = ?""", (result[13],)).fetchone()[0]
 
             self.result = result
-            # TODO do smth with seasons and episodes
-            # TODO make it look prettier
+
             self.searchresult.setFontPointSize(24)
 
             if exists('images/posters/' + result[8]):
@@ -74,7 +76,8 @@ class MainApp(QMainWindow):
             else:
                 self.film_image.setText('Что-то пошло не так')
 
-            self.searchresult.setText(f"""Номер в базе данных: {result[0]}
+            if series == '3':
+                self.searchresult.setText(f"""Номер в базе данных: {result[0]}
 Название: {result[1]}
 Оригинальное название: {result[2]}
 Жанр: {result[3]}
@@ -90,6 +93,23 @@ class MainApp(QMainWindow):
 Сборы: {result[19]}
 Где смотреть: {result[20]}
 """)
+            else:
+                self.searchresult.setText(f"""Номер в базе данных: {result[0]}
+Название: {result[1]}
+Оригинальное название: {result[2]}
+Жанр: {result[3]}
+Тип кино: {result[4]}
+Дата премьеры: {result[5]}
+Продолжительность в минутах: {result[6]}
+Режиссер: {result[11]}
+Главные актеры: {result[12]}
+Рейтинг на IMDb: {result[16]} из 10
+Рейтинг на Rotten Tomatoes: {result[17]}% из 100%
+Рейтинг на КиноПоиск: {result[18]} из 10
+Сборы: {result[19]}
+Где смотреть: {result[20]}
+""")
+
         except IndexError:
             self.searchresult.setFontPointSize(24)
             self.searchresult.setText(
@@ -127,10 +147,23 @@ class AboutProgramDialog(QDialog):
         super().__init__()
         uic.loadUi('ui/about_program.ui', self)
         self.setFixedSize(960, 720)
-        with open('about_program.txt') as file:
+        with open('default/about_program.txt') as file:
             txt = file.read()
         self.about_text.setFontPointSize(24)
         self.about_text.setText(txt)
+
+
+class HelpDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ui/help.ui', self)
+        self.setFixedSize(960, 720)
+        self.setWindowTitle('Помощь')
+        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
+        with open('default/help.txt') as file:
+            txt = file.read()
+        self.help_text.setFontPointSize(24)
+        self.help_text.setText(txt)
 
 
 class CastDialog(QDialog):
@@ -158,6 +191,7 @@ class DescriptionDialog(QDialog):
         self.description_text.setFontPointSize(24)
         self.description_text.setText(txt)
 
+
 """
 class TrailerDialog(QDialog):
     def __init__(self, file):
@@ -173,19 +207,6 @@ class TrailerDialog(QDialog):
 """
 
 
-class HelpDialog(QDialog):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi('ui/help.ui', self)
-        self.setFixedSize(960, 720)
-        self.setWindowTitle('Помощь')
-        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
-        with open('help.txt') as file:
-            txt = file.read()
-        self.help_text.setFontPointSize(24)
-        self.help_text.setText(txt)
-
-
 class FilterDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -194,6 +215,87 @@ class FilterDialog(QDialog):
         self.setWindowTitle('Фильтрация')
         self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
 
+
+class AddingDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ui/adding.ui', self)
+        self.setFixedSize(1280, 960)
+        self.setWindowTitle('Добавление')
+        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
+        self.connection = sqlite3.connect('default/films_db.db')
+        self.checkbutton.clicked.connect(lambda: self.check_info())
+        self.addbutton.clicked.connect(lambda: self.adding_info())
+        self.check = []
+
+    def check_info(self):
+        self.check = []
+        if not self.nameedit.text():
+            self.check.append('Добавьте название')
+        if not self.originalnameedit.text():
+            self.check.append('Добавьте оригинальное название')
+        if not self.genreedit.text():
+            self.check.append('Добавьте жанр')
+        if not self.typeedit.text():
+            self.check.append('Добавьте тип')
+        if not self.dateedit.text():
+            self.check.append('Добавьте дату премьеры')
+        if not self.durationedit.text():
+            self.check.append('Добавьте продолжительность')
+        if not self.descriptionedit.text():
+            self.check.append('Добавьте файл с описанием')
+        if not self.posteredit.text():
+            self.check.append('Добавьте файл с постером')
+        if not self.imageedit.text():
+            self.check.append('Добавьте файл с изображением')
+        if not self.traileredit.text():
+            self.check.append('Добавьте файл с трейлером')
+        if not self.directoredit.text():
+            self.check.append('Добавьте режиссера')
+        if not self.mainactorsedit.text():
+            self.check.append('Добавьте главных актеров')
+        if not self.castedit.text():
+            self.check.append('Добавьте файл с актерами')
+        if not self.seasonsedit.text():
+            self.check.append('Добавьте количество сезонов')
+        if not self.episodesedit.text():
+            self.check.append('Добавьте количество серий')
+        if not self.imdbratingedit.text():
+            self.check.append('Добавьте рейтинг на IMDb')
+        if not self.rottentomatoesratingedit.text():
+            self.check.append('Добавьте рейтинг на Rotten Tomatoes')
+        if not self.kinopoiskratingedit.text():
+            self.check.append('Добавьте рейтинг на Кинопоиск')
+        if not self.boxofficeedit.text():
+            self.check.append('Добавьте сборы')
+        if not self.wheretowatchedit.text():
+            self.check.append('Добавьте где смотреть')
+
+        if self.check:
+            self.checktext.setText('\n'.join(self.check))
+        else:
+            self.checktext.setText('Все хорошо, можете добавлять в базу данных')
+
+    def adding_info(self):
+        if self.checktext.toPlainText() == 'Все хорошо, можете добавлять в базу данных':
+            num = self.connection.cursor().execute("""SELECT id FROM films_table""").fetchall()
+            num = int(num[-1][0]) + 1
+            self.connection.cursor().execute("""INSERT INTO casts(id, actors) VALUES(?, ?)""", (num, self.castedit.text()))
+            self.connection.cursor().execute("""INSERT INTO descriptions(id, description) VALUES(?, ?)""", (num, self.descriptionedit.text()))
+            self.connection.cursor().execute("""INSERT INTO images(id, image) VALUES(?, ?)""", (num, self.imageedit.text()))
+            self.connection.cursor().execute("""INSERT INTO posters(id, poster) VALUES(?, ?)""", (num, self.posteredit.text()))
+            self.connection.cursor().execute("""INSERT INTO trailers(id, trailer) VALUES(?, ?)""", (num, self.traileredit.text()))
+            self.connection.commit()
+            cast = int(self.connection.cursor().execute("""SELECT id FROM casts WHERE actors = ?""", (self.castedit.text(),)).fetchone()[0])
+            description = int(self.connection.cursor().execute("""SELECT id FROM descriptions WHERE description = ?""", (self.descriptionedit.text(),)).fetchone()[0])
+            genre = int(self.connection.cursor().execute("""SELECT id FROM genres WHERE name = ?""", (self.genreedit.text(),)).fetchone()[0])
+            image = int(self.connection.cursor().execute("""SELECT id FROM images WHERE image = ?""", (self.imageedit.text(),)).fetchone()[0])
+            poster = int(self.connection.cursor().execute("""SELECT id FROM posters WHERE poster = ?""", (self.posteredit.text(),)).fetchone()[0])
+            trailer = int(self.connection.cursor().execute("""SELECT id FROM trailers WHERE trailer = ?""", (self.traileredit.text(),)).fetchone()[0])
+            type_of_film = int(self.connection.cursor().execute("""SELECT id FROM types WHERE type = ?""", (self.typeedit.text(),)).fetchone()[0])
+            self.connection.cursor().execute("""INSERT INTO films_table(id, title, original_title, genre, type, date, duration, description, poster, images, trailer, director, main_actors, cast, seasons, episodes, imdb_rating, rottentomatoes_rating, kinopoisk_rating, box_office, where_to_watch) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""", (num, self.nameedit.text(), self.originalnameedit.text(), genre, type_of_film, self.dateedit.text(), self.durationedit.text(), description, poster, image, trailer, self.directoredit.text(), self.mainactorsedit.text(), cast, self.seasonsedit.text(), self.episodesedit.text(), self.imdbratingedit.text(), self.rottentomatoesratingedit.text(), self.kinopoiskratingedit.text(), self.boxofficeedit.text(), self.wheretowatchedit.text()))
+            self.connection.commit()
+            self.addtext.setText('Ваши данные успешно добавлены в базу данных')
 
 
 if __name__ == '__main__':
