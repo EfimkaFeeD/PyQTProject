@@ -6,8 +6,8 @@ from os import getcwd
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap, QIcon
-from PyQt5.QtCore import QUrl
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+# from PyQt5.QtCore import QUrl
+# from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 
 
 class MainApp(QMainWindow):
@@ -27,6 +27,8 @@ class MainApp(QMainWindow):
         self.add_info_action.triggered.connect(lambda: AddingDialog().exec_())
         self.change_info_action.triggered.connect(
             lambda: EditingDialog().exec_())
+        self.filter_info_action.triggered.connect(
+            lambda: FilterDialog().exec_())
         self.help_action.triggered.connect(lambda: HelpDialog().exec_())
         self.castbutton.clicked.connect(lambda: self.check_for_casts())
         self.descriptionbutton.clicked.connect(
@@ -39,12 +41,10 @@ class MainApp(QMainWindow):
             query = self.searchedit.text()
             if name_type == 1:
                 tmp = self.connection.cursor().execute(
-                    """SELECT * FROM films_table WHERE title = ?""", (query, )).fetchall()
+                    """SELECT * FROM films_table WHERE title = ?""", (query, )).fetchall()[0]
             elif name_type == 2:
                 tmp = self.connection.cursor().execute(
-                    """SELECT * FROM films_table WHERE original_title = ?""", (query,)).fetchall()
-
-            tmp = tmp[0]
+                    """SELECT * FROM films_table WHERE original_title = ?""", (query,)).fetchall()[0]
 
             for i in tmp:
                 result.append(i)
@@ -96,7 +96,7 @@ class MainApp(QMainWindow):
 Рейтинг на IMDb: {result[16]} из 10
 Рейтинг на Rotten Tomatoes: {result[17]}% из 100%
 Рейтинг на КиноПоиск: {result[18]} из 10
-Сборы: {result[19]}
+Сборы: ${result[19]}
 Где смотреть: {result[20]}
 """)
             else:
@@ -112,7 +112,7 @@ class MainApp(QMainWindow):
 Рейтинг на IMDb: {result[16]} из 10
 Рейтинг на Rotten Tomatoes: {result[17]}% из 100%
 Рейтинг на КиноПоиск: {result[18]} из 10
-Сборы: {result[19]}
+Сборы: ${result[19]}
 Где смотреть: {result[20]}
 """)
 
@@ -217,15 +217,6 @@ class TrailerDialog(QDialog):
         player.setVideoOutput(self.trailervideo)
         player.play()
 """
-
-
-class FilterDialog(QDialog):
-    def __init__(self):
-        super().__init__()
-        uic.loadUi('ui/filter.ui', self)
-        self.setFixedSize(1280, 960)
-        self.setWindowTitle('Фильтрация')
-        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
 
 
 class AddingDialog(QDialog):
@@ -600,6 +591,114 @@ class EditingDialog(QDialog):
                 self.checktext.setText('Сначала проверьте данные')
         else:
             self.checktext.setText('Такого номера нет в базе данных')
+
+
+class FilterDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ui/filter.ui', self)
+        self.setFixedSize(1280, 960)
+        self.setWindowTitle('Фильтрация')
+        self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
+        self.connection = sqlite3.connect('default/films_db.db')
+        self.mainactorsbutton.clicked.connect(lambda: self.filter(1))
+        self.directorbutton.clicked.connect(lambda: self.filter(2))
+        self.genrebutton.clicked.connect(lambda: self.filter(3))
+        self.typebutton.clicked.connect(lambda: self.filter(4))
+        self.yearbutton.clicked.connect(lambda: self.filter(5))
+        self.ratingbutton.clicked.connect(lambda: self.filter(6))
+        self.boxofficebutton.clicked.connect(lambda: self.filter(7))
+        self.wheretowatchbutton.clicked.connect(lambda: self.filter(8))
+        self.durationmorebutton.clicked.connect(lambda: self.filter(9))
+        self.durationlessbutton.clicked.connect(lambda: self.filter(10))
+        self.filtered = []
+
+    def filter(self, number):
+        if self.filteredit.text():
+            if number == 1:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE main_actors LIKE '%?%'""",
+                    (self.filteredit.text(),
+                     )).fetchall()
+            elif number == 2:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE director LIKE '%?%'""",
+                    (self.filteredit.text(),
+                     )).fetchall()
+            elif number == 3:
+                tmp = self.connection.cursor().execute("""SELECT id FROM genres WHERE name = ?""",
+                                                       (self.filteredit.text(), )).fetchone()[0]
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE genre = ?""", (tmp, )).fetchall()
+            elif number == 4:
+                tmp = self.connection.cursor().execute("""SELECT id FROM types WHERE type = ?""",
+                                                       (self.filteredit.text(), )).fetchone()[0]
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE type = ?""", (tmp, )).fetchall()
+            elif number == 5:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE date LIKE '%?'""",
+                    (self.filteredit.text(),
+                     )).fetchall()
+            elif number == 6:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE 
+                    (imdb_rating + kinopoisk_rating + (rottentomatoes_rating/ 10)) / 3 > ?""",
+                    (float(
+                        self.filteredit.text()),
+                     )).fetchall()
+            elif number == 7:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE box_office > ?""",
+                    (int(
+                        self.filteredit.text()),
+                     )).fetchall()
+            elif number == 8:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE where_to_watch LIKE '%?%'""",
+                    (self.filteredit.text(),
+                     )).fetchall()
+            elif number == 9:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE duration > ?""",
+                    (int(
+                        self.filteredit.text()),
+                     )).fetchall()
+            elif number == 10:
+                self.filtered = self.connection.cursor().execute(
+                    """SELECT * FROM films_table WHERE duration < ?""",
+                    (int(
+                        self.filteredit.text()),
+                     )).fetchall()
+
+            self.output()
+
+    def output(self):
+        if self.filtered:
+            tmp = []
+
+            self.outputtext.setText(
+                f'Было найдено {len(self.filtered)} элементов: \n')
+            for i in self.filtered:
+                tmp.append(i)
+
+            for i in tmp:
+                self.outputtext.append(f"""Номер в базе данных: {i[0]}
+Название: {i[1]}
+Оригинальное название: {i[2]}
+Жанр: {i[3]}
+Тип кино: {i[4]}
+Дата премьеры: {i[5]}
+Продолжительность в минутах: {i[6]}
+Режиссер: {i[11]}
+Главные актеры: {i[12]}
+Количество сезонов / серий: {i[14]} / {i[15]}
+Рейтинг на IMDb: {i[16]} из 10
+Рейтинг на Rotten Tomatoes: {i[17]}% из 100%
+Рейтинг на КиноПоиск: {i[18]} из 10
+Сборы: ${i[19]}
+Где смотреть: {i[20]}
+""")
 
 
 if __name__ == '__main__':
