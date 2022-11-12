@@ -22,10 +22,10 @@ class MainApp(QMainWindow):
         self.downloadended.setFontPointSize(24)
         self.filenameoutput.setFontPointSize(24)
         self.trailerinfo.setFontPointSize(24)
-        self.downloadbutton.clicked.connect(lambda:self.download_trailer())
-        self.checkfilebutton.clicked.connect(lambda:self.check_file())
-        self.renamebutton.clicked.connect(lambda:self.rename_file())
-        self.movebutton.clicked.connect(lambda:self.move_file())
+        self.downloadbutton.clicked.connect(lambda: self.download_trailer())
+        self.checkfilebutton.clicked.connect(lambda: self.check_file())
+        self.renamebutton.clicked.connect(lambda: self.rename_file())
+        self.movebutton.clicked.connect(lambda: self.move_file())
 
     def download_trailer(self):
         url = self.urlinput.text()
@@ -48,16 +48,17 @@ class MainApp(QMainWindow):
 
     def check_file(self):
         try:
-            tmp = self.data['requested_downloads']
             if exists(self.path):
                 self.trailerinfo.setText('Скачивание прошло успешно, файл находится в папке, '
                                          'продолжайте следовать инструкции.')
             else:
-                self.trailerinfo.setText('Что-то пошло не так, попробуйте повторить попытку скачивания.')
+                self.trailerinfo.setText(
+                    'Что-то пошло не так, попробуйте повторить попытку скачивания.')
             self.nameinput.setText(self.filename)
             self.nameoutput.setText(self.filename[self.filename.rfind('.'):])
         except KeyError:
-            self.trailerinfo.setText('Что-то пошло не так, попробуйте повторить попытку скачивания.')
+            self.trailerinfo.setText(
+                'Что-то пошло не так, попробуйте повторить попытку скачивания.')
 
     def rename_file(self):
         try:
@@ -67,8 +68,8 @@ class MainApp(QMainWindow):
             rename(name_input, name_output)
             self.namemove.setText(self.outputname)
         except FileNotFoundError:
-            self.trailerinfo.setText('Что-то пошло не так, проверьте наличие файла в папке.')
-
+            self.trailerinfo.setText(
+                'Что-то пошло не так, проверьте наличие файла в папке.')
 
     def move_file(self):
         try:
@@ -77,7 +78,8 @@ class MainApp(QMainWindow):
             after = getcwd() + '/trailers/' + move_name
             shutil.move(before, after)
         except shutil.Error:
-            self.trailerinfo.setText('Что-то пошло не так, проверьте наличие файла в папке.')
+            self.trailerinfo.setText(
+                'Что-то пошло не так, проверьте наличие файла в папке.')
 
 
 if __name__ == '__main__':
