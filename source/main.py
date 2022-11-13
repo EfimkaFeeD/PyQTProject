@@ -1,15 +1,16 @@
 import sqlite3
 import sys
-import mpv
+# import mpv не удалось заставить работать на Windows
 from os.path import exists
 from os import getcwd
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 from PyQt5.QtGui import QPixmap, QIcon
 # from PyQt5.QtCore import QUrl
-# from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+# from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent импорты для работы первой версии показа трейлера
 
 
+# Главный класс приложения
 class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -33,8 +34,9 @@ class MainApp(QMainWindow):
         self.castbutton.clicked.connect(lambda: self.check_for_casts())
         self.descriptionbutton.clicked.connect(
             lambda: self.check_for_description())
-        self.trailerbutton.clicked.connect(lambda: self.trailer())
+        # self.trailerbutton.clicked.connect(lambda: self.trailer()) кнопка для показа трейлера, не работает на Windows
 
+    # Осуществляет поиск и вывод информации из базы данных
     def search_in_table(self, name_type):
         try:
             result = []
@@ -51,6 +53,7 @@ class MainApp(QMainWindow):
 
             series = str(result[4])
 
+            # Подставляем правильные данных из других таблиц базы данных
             result[3] = self.connection.cursor().execute(
                 """SELECT name FROM genres WHERE id = ?""", (result[3], )).fetchone()[0]
             result[4] = self.connection.cursor().execute(
@@ -70,6 +73,7 @@ class MainApp(QMainWindow):
 
             self.searchresult.setFontPointSize(24)
 
+            # Вывод постера и изображения
             if exists('images/posters/' + result[8]):
                 self.film_poster.setPixmap(
                     QPixmap(f'images/posters/{result[8]}'))
@@ -122,6 +126,8 @@ class MainApp(QMainWindow):
                 'По вашему запросу не было найдено информации, либо информация по данному запросу некорректна. '
                 'Попробуйте изменить свой запрос или отредактируйте некорректную информацию.')
 
+    # Показ трейлера через mpv, не работает на Windows
+    """
     def trailer(self):
         try:
             file = getcwd() + '/trailers/' + self.result[10]
@@ -135,7 +141,9 @@ class MainApp(QMainWindow):
         except IndexError:
             self.searchresult.setText(
                 'Информации о трейлере для данного фильма нет.')
+    """
 
+    # Проверки на наличие файлов в папках
     def check_for_description(self):
         try:
             DescriptionDialog(self.result[7]).exec_()
@@ -150,21 +158,24 @@ class MainApp(QMainWindow):
             self.searchresult.setText(
                 'Информации об актерах для данного фильма нет.')
 
+    # Функция при закрытии приложения
     def closeEvent(self, event):
         self.connection.close()
 
 
+# Диалоговое окно о программе (вызывается по нажатию в верхнем меню)
 class AboutProgramDialog(QDialog):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui/about_program.ui', self)
         self.setFixedSize(960, 720)
-        with open('default/about_program.txt') as file:
+        with open('default/about_program.txt', encoding='utf8') as file:
             txt = file.read()
         self.about_text.setFontPointSize(24)
         self.about_text.setText(txt)
 
 
+# Диалоговое окно для помощи (вызывается по нажатию в верхнем меню)
 class HelpDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -172,12 +183,13 @@ class HelpDialog(QDialog):
         self.setFixedSize(960, 720)
         self.setWindowTitle('Помощь')
         self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
-        with open('default/help.txt') as file:
+        with open('default/help.txt', encoding='utf8') as file:
             txt = file.read()
         self.help_text.setFontPointSize(24)
         self.help_text.setText(txt)
 
 
+# Диалоговое окно для вывода актеров (вызывается по нажатию кнопки)
 class CastDialog(QDialog):
     def __init__(self, name):
         super().__init__()
@@ -185,12 +197,16 @@ class CastDialog(QDialog):
         self.setFixedSize(960, 720)
         self.setWindowTitle('Актеры')
         self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
-        with open(f'text/casts/{name}.txt') as file:
-            txt = file.read()
         self.cast_text.setFontPointSize(24)
-        self.cast_text.setText(txt)
+        if exists(f'text/casts/{name}.txt'):
+            with open(f'text/casts/{name}.txt', encoding='utf8') as file:
+                txt = file.read()
+                self.cast_text.setText(txt)
+        else:
+            self.cast_text.setText('Информации об актерах для данного фильма нет.')
 
 
+# Диалоговое окно для вывода описания (вызывается по нажатию кнопки)
 class DescriptionDialog(QDialog):
     def __init__(self, name):
         super().__init__()
@@ -198,12 +214,16 @@ class DescriptionDialog(QDialog):
         self.setFixedSize(960, 720)
         self.setWindowTitle('Описание')
         self.setWindowIcon(QIcon('ui/icons/window-icon-light.png'))
-        with open(f'text/descriptions/{name}.txt') as file:
-            txt = file.read()
         self.description_text.setFontPointSize(24)
-        self.description_text.setText(txt)
+        if exists(f'text/descriptions/{name}.txt'):
+            with open(f'text/descriptions/{name}.txt', encoding="utf8") as file:
+                txt = file.read()
+                self.description_text.setText(txt)
+        else:
+            self.description_text.setText('Информации об описании для данного фильма нет.')
 
 
+# Диалоговое окно для показа трейлера, не удалось заставить его работать
 """
 class TrailerDialog(QDialog):
     def __init__(self, file):
@@ -219,6 +239,7 @@ class TrailerDialog(QDialog):
 """
 
 
+# Диалоговое окно для добавления новой информации (вызывается по нажатию в верхнем меню)
 class AddingDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -231,6 +252,7 @@ class AddingDialog(QDialog):
         self.addbutton.clicked.connect(lambda: self.adding_info())
         self.check = []
 
+    # Проверка на заполнения всех пунктов
     def check_info(self):
         self.check = []
         if not self.nameedit.text():
@@ -280,6 +302,7 @@ class AddingDialog(QDialog):
             self.checktext.setText(
                 'Все хорошо, можете добавлять в базу данных')
 
+    # Добавление в базу данных
     def adding_info(self):
         if self.checktext.toPlainText() == 'Все хорошо, можете добавлять в базу данных':
             num = self.connection.cursor().execute(
@@ -369,6 +392,7 @@ class AddingDialog(QDialog):
             self.checktext.setText('Сначала проверьте данные')
 
 
+# Диалоговое окно для правки информации (сделано на основе AddingDialog) (вызывается в верхнем меню)
 class EditingDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -497,6 +521,7 @@ class EditingDialog(QDialog):
             self.checktext.setText(
                 'Все хорошо, можете добавлять в базу данных')
 
+    # Правка информацию в базе данных
     def editing_info(self):
         num = self.num
 
@@ -593,6 +618,7 @@ class EditingDialog(QDialog):
             self.checktext.setText('Такого номера нет в базе данных')
 
 
+# Диалоговое окно для фильтрации информации (вызывается из верхнего меню)
 class FilterDialog(QDialog):
     def __init__(self):
         super().__init__()
@@ -613,6 +639,7 @@ class FilterDialog(QDialog):
         self.durationlessbutton.clicked.connect(lambda: self.filter(10))
         self.filtered = []
 
+    # Поиск по нужному запросу
     def filter(self, number):
         if self.filteredit.text():
             if number == 1:
@@ -673,6 +700,7 @@ class FilterDialog(QDialog):
 
             self.output()
 
+    # Вывод информации
     def output(self):
         if self.filtered:
             tmp = []

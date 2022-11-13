@@ -8,6 +8,7 @@ from os.path import exists
 from os import rename, getcwd
 
 
+# Главный класс программы (шанс что запуститься на Windows крайне мал)
 class MainApp(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -27,6 +28,7 @@ class MainApp(QMainWindow):
         self.renamebutton.clicked.connect(lambda: self.rename_file())
         self.movebutton.clicked.connect(lambda: self.move_file())
 
+    # Скачивание видео с помощью yt_dlp
     def download_trailer(self):
         url = self.urlinput.text()
         ydl_opts = {}
@@ -38,6 +40,7 @@ class MainApp(QMainWindow):
         except Exception:
             self.downloadended.setText('Проверьте URL')
 
+    # Вывод имени файла по завершению скачивания
     def output_result(self):
         tmp = self.data['requested_downloads']
         tmp = tmp[0]
@@ -46,6 +49,7 @@ class MainApp(QMainWindow):
         self.downloadended.setText('Скачивание завершено')
         self.filenameoutput.setText(self.filename)
 
+    # Проверка на наличие файла в папке
     def check_file(self):
         try:
             if exists(self.path):
@@ -60,6 +64,7 @@ class MainApp(QMainWindow):
             self.trailerinfo.setText(
                 'Что-то пошло не так, попробуйте повторить попытку скачивания.')
 
+    # Переименование файла
     def rename_file(self):
         try:
             name_input = self.nameinput.text()
@@ -71,6 +76,7 @@ class MainApp(QMainWindow):
             self.trailerinfo.setText(
                 'Что-то пошло не так, проверьте наличие файла в папке.')
 
+    # Перемещение файла
     def move_file(self):
         try:
             move_name = self.namemove.text()
